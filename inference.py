@@ -14,4 +14,6 @@ model.to(device="cuda:0")
 prompt = "In a shocking turn of events"
 inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
 generate_ids = model.generate(inputs.input_ids, max_length=100)
-tokenizer.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
+tokenizer.batch_decode(
+    generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False
+)[0]

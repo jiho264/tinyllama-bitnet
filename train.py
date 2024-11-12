@@ -1,4 +1,11 @@
-from transformers import (AutoTokenizer, AutoConfig, LlamaForCausalLM, DataCollatorForLanguageModeling, Trainer, TrainingArguments)
+from transformers import (
+    AutoTokenizer,
+    AutoConfig,
+    LlamaForCausalLM,
+    DataCollatorForLanguageModeling,
+    Trainer,
+    TrainingArguments,
+)
 from datasets import load_dataset
 from huggingface_hub import login
 import wandb
@@ -6,8 +13,10 @@ from utils import *
 
 ### Login
 # Wandb is for logging and is optional.
-hf_token = "<your_hf_token>"
-wb_token = "<your_wb_token>"
+import _token_info
+
+hf_token = _token_info.hf_token  # "<your_hf_token>"
+wb_token = _token_info.wb_token  # "<your_wb_token>"
 wandb.login(key=wb_token)
 login(token=hf_token)
 
@@ -38,7 +47,7 @@ login(token=hf_token)
 #     return {"input_ids": input_batch}
 
 # tokenized_data = subset.map(
-#     tokenize, batched=True, remove_columns=data["train"].column_names, 
+#     tokenize, batched=True, remove_columns=data["train"].column_names,
 # )
 ### End Load and tokenize training data
 
@@ -49,7 +58,7 @@ context_length = 256
 tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-2-7b-hf")
 tokenized_data = load_dataset("xz56/openwebtext-tokenized-small")
 
-total_tokens = tokenized_data['train'].num_rows * context_length
+total_tokens = tokenized_data["train"].num_rows * context_length
 print(f"Training on {total_tokens:_} tokens")
 
 ### Adjust llama config to make the model tiny
@@ -74,7 +83,7 @@ config.intermediate_size = intermediate_size
 
 ### Create the llama model with our custom config. Convert it to bitnet.
 # See utils.py for BitLinear and convert_to_bitnet function details.
-model = LlamaForCausalLM(config)                  
+model = LlamaForCausalLM(config)
 convert_to_bitnet(model, copy_weights=False)
 
 ### Print number of parameters.
@@ -105,7 +114,7 @@ args = TrainingArguments(
     learning_rate=1.5e-3,
     save_steps=0.25,
     fp16=True,
-    report_to="wandb"
+    report_to="wandb",
 )
 
 trainer = Trainer(
