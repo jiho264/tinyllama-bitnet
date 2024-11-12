@@ -98,18 +98,19 @@ data_collator = DataCollatorForLanguageModeling(tokenizer, mlm=False)
 # Adjust the batch size until you can train on your device. Then increase accumulation steps to satisfy the following:
 # tokens per batch = per_device_train_batch_size * gradient_accumulation_steps * 256
 # Adjust this until tokens per batch is at least ~100k.
-output_path = "<folder_to_save_checkpoints>"
+output_path = "./checkpoints"
 args = TrainingArguments(
+    run_name="Llama-2-7b-hf",
     output_dir=output_path,
-    per_device_train_batch_size=200,
-    per_device_eval_batch_size=200,
-    evaluation_strategy="steps",
+    per_device_train_batch_size=100,
+    per_device_eval_batch_size=100,
+    eval_strategy="steps",
     eval_steps=0.05,
     logging_steps=100,
     gradient_accumulation_steps=2,
     num_train_epochs=1,
     weight_decay=0.01,
-    warmup_steps=0.1,
+    warmup_steps=0,
     lr_scheduler_type="cosine",
     learning_rate=1.5e-3,
     save_steps=0.25,

@@ -2,3 +2,6 @@ _token_info.py
 **/**.pt
 **/**.pth
 **/**.pyc
+tempCodeRunnerFile.py
+checkpoints
+wandb
